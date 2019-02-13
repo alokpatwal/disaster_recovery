@@ -24,12 +24,8 @@ printf "Enter VPC security group ID of the master instance:\n"
 read SECURITY_GROUP_ID
 printf "Enter CIDR of the rule that you want to temporarily revoke from security group - $SECURITY_GROUP_ID\n"
 read CIDR
-printf "Enter Restore time(UTC) in the format \"2019-02-12T02:00:00Z\"\n"
-read RESTORE_TIME
-printf "Enter DB subnet group name of the master instance:\n"
-read DB_SUBNET_GROUP_NAME
 
-#Stop replication. 
+#Stop replication.
 rds_perf_read -e "call mysql.rds_stop_replication()";
 date
 printf "Replication stopping... ETA: < 5s\n\n"
@@ -39,6 +35,11 @@ printf "Replication stopping... ETA: < 5s\n\n"
 aws ec2 revoke-security-group-ingress --group-id "$SECURITY_GROUP_ID" --protocol tcp --port 3306 --cidr "$CIDR"
 date
 printf "Incoming traffic to database stopping... ETA: < 5s\n\n"
+
+printf "Enter Restore time(UTC) in the format \"2019-02-12T02:00:00Z\"\n"
+read RESTORE_TIME
+printf "Enter DB subnet group name of the master instance:\n"
+read DB_SUBNET_GROUP_NAME
 
 #Restore master to point-in-time. The time specified is in UTC. Took around 12 minutes on perf-testing(db.m4.large) rds.
 aws rds restore-db-instance-to-point-in-time --source-db-instance-identifier "$old_rds_identifier" --target-db-instance-identifier "$temp_rds_identifier" --restore-time "$RESTORE_TIME" --db-subnet-group-name "$DB_SUBNET_GROUP_NAME" --vpc-security-group-ids "$SECURITY_GROUP_ID" --no-multi-az --deletion-protection 
