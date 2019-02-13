@@ -2,7 +2,7 @@
 shopt -s expand_aliases
 source ~/.bash_aliases
 
-#Constants  for this job: old_rds_identifier,old_rds_read_identifier. If disaster recovery is needed on another production RDS, change these constants below along with the other constants if needed.
+#Constants  for  this job: old_rds_identifier,old_rds_read_identifier. If disaster recovery is needed on another production RDS, change these constants below along with the other constants if needed.
 #Parameters: SECURITY_GROUP_ID =(sg-0a95b05dfcef42f38), CIDR =(10.120.0.117/32), RESTORE_TIME =(2019-02-12T02:00:00Z), DB_SUBNET_GROUP_NAME =(kube-eztrans-prod-rds),  
 
 old_rds_identifier='perf-testing-eztrans-prod'
